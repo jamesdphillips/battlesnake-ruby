@@ -1,11 +1,15 @@
 require 'sinatra'
-require 'json'
+require 'oj'
+require 'hashie'
+require 'active_support/all'
+require './utils'
 
 $game_states = {};
 
 before do
   @body = request.body.read
-  @json = body ? JSON.parse(body) : {}
+  puts @body.inspect, @body.class
+  @json = Hashie::Mash.new(Oj.load(@body))
   @game_state = ($game_states[@json.game_id] ||= @json)
 end
 
