@@ -33,20 +33,16 @@ module Utils
     end
 
     def project_location(direction, coord)
-      next_pos = coord.dup
-
       case direction
       when 'up'
-        next_pos.second -= 1
+        [coord.first, coord.second - 1]
       when 'down'
-        next_pos.second += 1
+        [coord.first, coord.second + 1]
       when 'left'
-        next_pos.first -= 1
+        [coord.first - 1, coord.second]
       when 'right'
-        next_pos.first += 1
+        [coord.first, coord.second - 1]
       end
-
-      next_pos
     end
 
     def is_wall?(direction, snake, game)
