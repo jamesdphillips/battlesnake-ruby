@@ -6,19 +6,25 @@ module Utils
       last_move = game.last_move || "up"
       our_snake = state.snakes.detect { |snake| snake == 'Hordor'  }
 
-      valid = ['up', 'down', 'left', 'right'].select do |direction|
-        if is_opposite?(last_move, direction)
-          false
-        elsif is_wall?(direction, snake, game)
-          false
-        elsif has_snake?(direction, snake, game)
-          false
-        end
+      scores = ['up', 'down', 'left', 'right'].map do |direction|
+        score = 100
 
-        true
+        if is_opposite?(last_move, direction)
+          {direction => 0}
+        elsif is_wall?(direction, snake, game)
+          {direction => 0}
+        elsif has_snake?(direction, snake, game)
+          {direction => 0}
+        else
+          {direction => score}
+        end
       end
 
-      valid.first
+      # Find the highest direction
+      highest_direction = scores.sort {|a,b| a[1]<=>b[1]}.first.first
+      game.last_move = highest_direction
+
+      highest_direction
     end
 
     def project_location(direction, coord)
