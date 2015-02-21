@@ -11,9 +11,9 @@ module Utils
 
         #if is_opposite?(last_move, direction)
         #  [direction, 0]
-        if is_wall?(direction, snake, game)
+        if is_wall?(direction, our_snake, game)
           [direction, 0]
-        elsif has_snake?(direction, snake, game)
+        elsif has_snake?(direction, our_snake, game)
           [direction, 0]
         else
           [direction, score]
