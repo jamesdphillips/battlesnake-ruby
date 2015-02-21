@@ -20,7 +20,8 @@ module Utils
         end
       end
 
-      puts "scores", Hash[scores]
+      puts "\n\n\nscores\n\n\n"
+      puts scores, Hash[scores].inspect
 
       # Find the highest direction
       highest_direction = Hash[scores].sort {|a,b| a[1]<=>b[1]}.first.first
