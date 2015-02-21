@@ -1,40 +1,33 @@
 require 'sinatra'
 require 'json'
 
+$game_states = {};
+
+before do
+  @body = request.body.read
+  @json = body ? JSON.parse(body) : {}
+  @game_state = ($game_states[@json.game_id] ||= @json)
+end
+
 post '/start' do
-    requestBody = request.body.read
-    requestJson = requestBody ? JSON.parse(requestBody) : {}
-
-    # Dummy response
-    responseObject = {
-        "name" => "battlesnake-ruby",
-        "color" => "cyan",
-        "head_url" => "http://battlesnake-ruby.herokuapp.com/",
-        "taunt" => "battlesnake-ruby"
-    }
-
-    return responseObject.to_json
+  return {
+    name: "Hodor",
+    head_url: "http://img.talkandroid.com/uploads/2014/11/hodor.png",
+    color: "#fff",
+    taunt: "Hordor!",
+  }.to_json;
 end
 
 post '/move' do
-    requestBody = request.body.read
-    requestJson = requestBody ? JSON.parse(requestBody) : {}
+  move = Utils.find_direction(@json, @game_state)
 
-    # Dummy response
-    responseObject = {
-        "move" => "up",
-        "taunt" => "going up!"
-    }
-
-    return responseObject.to_json
+  return {
+    move: move,
+    taunt: "Hodor?"
+  }.to_json
 end
 
 post '/end' do
-    requestBody = request.body.read
-    requestJson = requestBody ? JSON.parse(requestBody) : {}
-
-    # No response required
-    responseObject = {}
-
-    return responseObject.to_json
+  $game_states.delete(@game_state.game_id)
+  halt 200
 end
