@@ -9,14 +9,14 @@ module Utils
       scores = ['up', 'down', 'left', 'right'].map do |direction|
         score = 100
 
-        if is_opposite?(last_move, direction)
-          {direction => 0}
-        elsif is_wall?(direction, snake, game)
-          {direction => 0}
+        #if is_opposite?(last_move, direction)
+        #  [direction, 0]
+        if is_wall?(direction, snake, game)
+          [direction, 0]
         elsif has_snake?(direction, snake, game)
-          {direction => 0}
+          [direction, 0]
         else
-          {direction => score}
+          [direction, score]
         end
       end
 
@@ -24,7 +24,8 @@ module Utils
       puts scores, Hash[scores].inspect
 
       # Find the highest direction
-      highest_direction = Hash[scores].sort {|a,b| a[1]<=>b[1]}.first.first
+      highest_direction = Hash[scores].sort {|a,b| a[1]<=>b[1]}.first
+      highest_direction = highest_direction.try(:first) || "left"
       game.last_move = highest_direction
 
       highest_direction
