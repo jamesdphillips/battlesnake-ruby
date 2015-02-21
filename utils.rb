@@ -65,7 +65,7 @@ module Utils
     def has_snake?(direction, snake, state)
       head = snake.coords.first
       next_pos = project_location(direction, head)
-      snake_coords = state.snakes.map(&:coords).flatten
+      snake_coords = state.snakes.inject([]) { |all, coords| all + coords }
       snake_coords.any? { |coord| coord.first == next_pos.first && coord.second == next_pos.second }
     end
 
