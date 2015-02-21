@@ -20,8 +20,10 @@ module Utils
         end
       end
 
+      puts "scores", Hash[scores]
+
       # Find the highest direction
-      highest_direction = scores.sort {|a,b| a[1]<=>b[1]}.first.first
+      highest_direction = Hash[scores].sort {|a,b| a[1]<=>b[1]}.first.first
       game.last_move = highest_direction
 
       highest_direction
@@ -41,7 +43,7 @@ module Utils
         next_pos.first += 1
       end
 
-      next_post
+      next_pos
     end
 
     def is_wall?(direction, snake, game)

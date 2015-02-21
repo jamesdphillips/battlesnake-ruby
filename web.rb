@@ -13,6 +13,7 @@ before do
 end
 
 post '/start' do
+  puts "wtf", @json.inspect
   return {
     name: "Hordor",
     head_url: "http://i.imgur.com/ydglJcJ.png",
