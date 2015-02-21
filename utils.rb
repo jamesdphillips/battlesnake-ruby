@@ -5,7 +5,7 @@ module Utils
       move_score = 0
       last_move = game.last_move || "up"
       puts "snakes", state.snakes.inspect
-      our_snake = state.snakes.detect { |snake| snake == 'Hordor'  }
+      our_snake = state.snakes.detect { |snake| snake.name == 'Hordor'  }
 
       scores = ['up', 'down', 'left', 'right'].map do |direction|
         score = 100
