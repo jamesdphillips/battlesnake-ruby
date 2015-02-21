@@ -8,7 +8,6 @@ $game_states = {};
 
 before do
   @body = request.body.read
-  puts @body.inspect, @body.class
   @json = Hashie::Mash.new(Oj.load(@body))
   @game_state = ($game_states[@json.game_id] ||= @json)
 end
