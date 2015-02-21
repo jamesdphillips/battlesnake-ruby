@@ -13,7 +13,6 @@ before do
 end
 
 post '/start' do
-  puts "wtf", @json.inspect
   return {
     name: "Hordor",
     head_url: "http://i.imgur.com/ydglJcJ.png",
@@ -23,6 +22,7 @@ post '/start' do
 end
 
 post '/move' do
+  puts "current_game_state", @game_state, $game_states
   move = Utils.find_direction(@json, @game_state)
 
   return {
