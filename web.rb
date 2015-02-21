@@ -14,8 +14,8 @@ end
 
 post '/start' do
   return {
-    name: "Hodor",
-    head_url: "http://img.talkandroid.com/uploads/2014/11/hodor.png",
+    name: "Hordor",
+    head_url: "http://i.imgur.com/ydglJcJ.png",
     color: "#fff",
     taunt: "Hordor!",
   }.to_json;
