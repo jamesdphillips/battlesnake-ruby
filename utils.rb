@@ -48,6 +48,8 @@ module Utils
       head = snake.coords.first
       next_pos = project_location(direction, head)
 
+      puts game.inspect, next_post.inspect, head.inspect
+
       case
       when next_pos.first < 0
         true

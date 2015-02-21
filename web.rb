@@ -22,7 +22,6 @@ post '/start' do
 end
 
 post '/move' do
-  puts "current_game_state", @game_state, $game_states
   move = Utils.find_direction(@json, @game_state)
 
   return {
