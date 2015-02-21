@@ -85,12 +85,3 @@ module Utils
     end
   end
 end
-
-class Game
-  
-end
-
-class Snake
-
-end
-end
