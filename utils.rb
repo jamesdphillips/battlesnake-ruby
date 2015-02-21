@@ -2,8 +2,7 @@ module Utils
 
   class << self
     def find_direction(state, game)
-      move_score = 0
-      last_move = game.last_move || "up"
+      # last_move = game.last_move || "up"
       puts "snakes", state.snakes.inspect
       our_snake = state.snakes.detect { |snake| snake.name == 'Hordor'  }
 
@@ -14,7 +13,7 @@ module Utils
         #  [direction, 0]
         if is_wall?(direction, our_snake, game)
           [direction, 0]
-        elsif has_snake?(direction, our_snake, game)
+        elsif has_snake?(direction, our_snake, state)
           [direction, 0]
         else
           [direction, score]
@@ -63,10 +62,10 @@ module Utils
       false
     end
 
-    def has_snake?(direction, snake, game)
+    def has_snake?(direction, snake, state)
       head = snake.coords.first
       next_pos = project_location(direction, head)
-      snake_coords = game.snakes.map(&:coords).flatten
+      snake_coords = state.snakes.map(&:coords).flatten
       snake_coords.any? { |coord| coord.first == next_pos.first && coord.second == next_pos.second }
     end
 
