@@ -9,30 +9,31 @@ module Utils
       objective = best_pelet(our_snake, state)
 
       scores = ['up', 'down', 'left', 'right'].map do |direction|
-        score = 50
+        score = 0
 
         if is_wall?(direction, our_snake, game)
-          score = 0
+          puts "is wall?", direction
+          score = -1
         elsif has_snake?(direction, our_snake, state)
-          score = 0
+          puts "snake?", direction
+          score = -1
         else
           head = our_snake.coords.first
           next_pos = project_location(direction, head)
           cur_distance = pythag(head.first - objective.x, head.second - objective.y)
           next_distance = pythag(next_pos.first - objective.x, next_pos.second - objective.y)
 
-          score -= 10 if cur_distance > next_distance
+          score += 10 if cur_distance > next_distance
         end
 
         puts "===\nmoves,", game.moves, "==="
-        puts "===\nmoves,", game.moves, "==="
-
+        puts "===\nturns,", game.turns, "==="
 
         if direction != last_move
           last_turn = game.turns.last
           second_last_turn = game.turns.last(2).first
-          current_turn = is_counter_clockwise?(last_move, highest_direction) ? 'cc' : 'c'
-          score -= 5 if last_turn == second_last_turn && last_turn == current_turn
+          current_turn = is_counter_clockwise?(last_move, direction) ? 'cc' : 'c'
+          score -= 5 if last_turn == second_last_turn && last_turn == current_turn && score > 0
         end
 
         [direction, score]
