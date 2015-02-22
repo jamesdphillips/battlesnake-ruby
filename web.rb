@@ -5,10 +5,7 @@ require 'active_support/all'
 require './utils'
 
 configure do
-  uri = URI.parse(ENV["REDISTOGO_URL"])
-  REDIS = Redis.new(host: uri.host, port: uri.port, password: uri.password)
-
-  puts "redis", REDIS.inspect
+  REDIS = Redis.new(url: ENV["REDISTOGO_URL"])
 end
 
 before do
