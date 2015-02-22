@@ -29,9 +29,12 @@ post '/move' do
   move = Utils.find_direction(@json, @game)
   REDIS.set("game.#{@json.game_id}", @game.to_json)
 
-  return {
-    move: move
-  }.to_json
+  if @game.moves.length % 5 === 0
+    taunt = ['Hodor!', 'BRB getting wards', '/me hodors', 'Ho- Hodor', 'AAAAAAyYYYyyy lmao'].sample
+    return { move: move, taunt: taunt }.to_json
+  else
+    return { move: move }.to_json
+  end
 end
 
 post '/end' do
