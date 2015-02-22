@@ -4,15 +4,22 @@ require 'hashie'
 require 'active_support/all'
 require './utils'
 
-$game_states = {};
+configure do
+  uri = URI.parse(ENV["REDISTOGO_URL"])
+  REDIS = Redis.new(host: uri.host, port: uri.port)
+
+  puts "redis", REDIS.inspect
+end
 
 before do
   @body = request.body.read
   @json = Hashie::Mash.new(Oj.load(@body))
-  @game_state = ($game_states[@json.game_id] ||= @json)
+  @game = Hashie::Mash.new(Oj.load(REDIS.get("game.#{@json.game_id}") || "{}"))
 end
 
 post '/start' do
+  REDIS.set "game.#{@json.game_id}", @body
+
   return {
     name: "Hordor",
     head_url: "http://i.imgur.com/ydglJcJ.png",
@@ -22,7 +29,8 @@ post '/start' do
 end
 
 post '/move' do
-  move = Utils.find_direction(@json, @game_state)
+  move = Utils.find_direction(@json, @game)
+  REDIS.set("game.#{@json.game_id}", @game.to_json)
 
   return {
     move: move,
@@ -31,6 +39,6 @@ post '/move' do
 end
 
 post '/end' do
-  $game_states.delete(@game_state.game_id)
+  settings.game_states.delete(@json.game_id)
   halt 200
 end
