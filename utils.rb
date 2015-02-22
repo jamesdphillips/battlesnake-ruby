@@ -5,20 +5,18 @@ module Utils
       game.moves ||= []
       game.turns ||= []
       last_move = (game.moves || []).last
-      our_snake = state.snakes.detect { |snake| snake.name == 'Hordor'  }
-      objective = best_pelet(our_snake, state)
+      our_snake = state.snakes.detect { |snake| snake.name == 'Hungry Hungry Hodor'  }
+      head = our_snake.coords.first
+      objective = best_pelet(head, state)
 
       scores = ['up', 'down', 'left', 'right'].map do |direction|
         score = 0
 
-        if is_wall?(direction, our_snake, game)
-          puts "is wall?", direction
+        if is_wall?(direction, head, game)
           score = -1
-        elsif has_snake?(direction, our_snake, state)
-          puts "snake?", direction
+        elsif has_snake?(direction, head, state)
           score = -1
         else
-          head = our_snake.coords.first
           next_pos = project_location(direction, head)
           cur_distance = pythag(head.first - objective.x, head.second - objective.y)
           next_distance = pythag(next_pos.first - objective.x, next_pos.second - objective.y)
@@ -26,14 +24,17 @@ module Utils
           score += 10 if cur_distance > next_distance
         end
 
-        puts "===\nmoves,", game.moves, "==="
-        puts "===\nturns,", game.turns, "==="
-
         if direction != last_move
           last_turn = game.turns.last
           second_last_turn = game.turns.last(2).first
           current_turn = is_counter_clockwise?(last_move, direction) ? 'cc' : 'c'
-          score -= 5 if last_turn == second_last_turn && last_turn == current_turn && score > 0
+          score -= 8 if last_turn == second_last_turn && last_turn == current_turn && score > 0
+        end
+
+        next_score = score_for_location(project_location(direction, head), game, state)
+        puts "== next score ==", next_score
+        if score_for_location(project_location(direction, head), game, state) == -1
+          score = -1
         end
 
         [direction, score]
@@ -53,6 +54,41 @@ module Utils
       end
 
       highest_direction
+    end
+
+    def score_for_location(location, game, state)
+      last_move = (game.moves || []).last
+      objective = best_pelet(location, state)
+
+      scores = ['up', 'down', 'left', 'right'].map do |direction|
+        score = 0
+
+        if is_wall?(direction, location, game)
+          puts "is wall?", direction
+          score = -1
+        elsif has_snake?(direction, location, state)
+          puts "snake?", direction
+          score = -1
+        else
+          next_pos = project_location(direction, location)
+          cur_distance = pythag(location.first - objective.x, location.second - objective.y)
+          next_distance = pythag(next_pos.first - objective.x, next_pos.second - objective.y)
+
+          score += 10 if cur_distance > next_distance
+        end
+
+        if direction != last_move
+          last_turn = game.turns.last
+          second_last_turn = game.turns.last(2).first
+          current_turn = is_counter_clockwise?(last_move, direction) ? 'cc' : 'c'
+          score -= 8 if last_turn == second_last_turn && last_turn == current_turn && score > 0
+        end
+
+        [direction, score]
+      end
+
+      top = Hash[scores].sort {|a,b| a[1]<=>b[1]}.reverse.first
+      top.try(:second) || -1
     end
 
     def project_location(direction, coord)
@@ -93,9 +129,8 @@ module Utils
       end
     end
 
-    def is_wall?(direction, snake, game)
-      head = snake.coords.first
-      next_pos = project_location(direction, head)
+    def is_wall?(direction, location, game)
+      next_pos = project_location(direction, location)
 
       case
       when next_pos.first < 0
@@ -111,8 +146,7 @@ module Utils
       end
     end
 
-    def best_pelet(snake, state)
-      head = snake.coords.first
+    def best_pelet(location, state)
       pelets = []
 
       state.board.each_with_index do |col, x|
@@ -122,7 +156,7 @@ module Utils
       end
 
       distances = pelets.map do |pelet|
-        x, y = head.first - pelet.x, head.second - pelet.y
+        x, y = location.first - pelet.x, location.second - pelet.y
         [pelet, pythag(x,y)]
       end
 
@@ -133,9 +167,8 @@ module Utils
       Math.sqrt((x * x) + (y * y))
     end
 
-    def has_snake?(direction, snake, state)
-      head = snake.coords.first
-      next_pos = project_location(direction, head)
+    def has_snake?(direction, location, state)
+      next_pos = project_location(direction, location)
       snake_coords = state.snakes.inject([]) { |all, snake| all + snake.coords }
       snake_coords.any? { |coord| coord.first == next_pos.first && coord.second == next_pos.second }
     end

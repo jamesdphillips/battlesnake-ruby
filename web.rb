@@ -6,7 +6,7 @@ require './utils'
 
 configure do
   uri = URI.parse(ENV["REDISTOGO_URL"])
-  REDIS = Redis.new(host: uri.host, port: uri.port)
+  REDIS = Redis.new(host: uri.host, port: uri.port, password: uri.password)
 
   puts "redis", REDIS.inspect
 end
@@ -21,10 +21,10 @@ post '/start' do
   REDIS.set "game.#{@json.game_id}", @body
 
   return {
-    name: "Hordor",
+    name: "Hungry Hungry Hodor",
     head_url: "http://i.imgur.com/ydglJcJ.png",
-    color: "#fff",
-    taunt: "Hordor!",
+    color: "salmon",
+    taunt: "Hodor!",
   }.to_json;
 end
 
@@ -33,8 +33,7 @@ post '/move' do
   REDIS.set("game.#{@json.game_id}", @game.to_json)
 
   return {
-    move: move,
-    taunt: "Hodor?"
+    move: move
   }.to_json
 end
 
