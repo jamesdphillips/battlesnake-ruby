@@ -31,11 +31,10 @@ module Utils
           score -= 8 if last_turn == second_last_turn && last_turn == current_turn && score > 0
         end
 
-        next_score = score_for_location(project_location(direction, head), game, state)
-        puts "== next score ==", next_score
-        if score_for_location(project_location(direction, head), game, state) == -1
-          score = -1
-        end
+        # next_score = score_for_location(project_location(direction, head), game, state)
+        # if score_for_location(project_location(direction, head), game, state) == -1
+        #  score = -1
+        # end
 
         [direction, score]
       end
